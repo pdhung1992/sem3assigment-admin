@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import {Navigate, Route, Routes} from "react-router-dom";
+import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import {useSelector} from "react-redux";
+
+function PrivateRoute({ element, roles }) {
+    const emp = useSelector(state => state.auth);
+    if (!emp.empData) {
+        // if not logged in
+        return <Navigate to="/login"/>;
+    }
+    return element;
+
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path={'/login'} element={<Login/>}/>
+        <Route path={'/*'}
+               element={<PrivateRoute element={<Admin/>}/> }
+        />
+      </Routes>
     </div>
   );
 }
